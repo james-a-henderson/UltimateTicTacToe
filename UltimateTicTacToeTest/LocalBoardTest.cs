@@ -8,9 +8,9 @@ namespace UltimateTicTacToeTest
     public class LocalBoardTest
     {
         [TestMethod]
-        public void makeMove_ValidFirstMoveTest()
+        public void makeMove_ValidFirstMove()
         {
-            LocalBoardState[,] expected1 = new LocalBoardState[,] { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.Blank }, 
+            LocalBoardState[,] expected1 = { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.Blank }, 
                                                 { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank }, 
                                                 { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank } };
             LocalBoardState[,] expected2 = { { LocalBoardState.O, LocalBoardState.Blank, LocalBoardState.Blank },
@@ -52,7 +52,7 @@ namespace UltimateTicTacToeTest
         }
 
         [TestMethod]
-        public void makeMove_MultipleValidMoves_Test()
+        public void makeMove_MultipleValidMoves()
         {
             LocalBoardState[,] expected1 = { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.Blank },
                                                 { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank },
