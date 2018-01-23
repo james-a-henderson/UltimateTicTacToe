@@ -17,20 +17,20 @@ namespace UltimateTicTacToe
             Board = new LocalBoardState[3, 3];
         }
 
-        public void makeMove(int x, int y, LocalBoardState move)
+        public GlobalBoardState makeMove(int row, int column, Player player)
         {
             if (BoardState != GlobalBoardState.Open)
                 throw new ArgumentException("Board is already completed");
 
-            if (x < 0 || x > 2 || y < 0 || y > 2)
+            if (row < 0 || row > 2 || column < 0 || column > 2)
                 throw new ArgumentOutOfRangeException("Position outside of the local board");
 
-            if (move == LocalBoardState.Blank)
-                throw new ArgumentException("LocalBoardState.Blank is not a valid move");
-
-            if(Board[x,y] == LocalBoardState.Blank)
+            if(Board[row,column] == LocalBoardState.Blank)
             {
-                Board[x, y] = move;
+                if (player == Player.X)
+                    Board[row, column] = LocalBoardState.X;
+                else
+                    Board[row, column] = LocalBoardState.O;
             }
             else
             {
@@ -38,6 +38,7 @@ namespace UltimateTicTacToe
             }
 
             verifyGlobalState();
+            return BoardState;
         }
 
         //this method assumes that there cannot be a valid X and O row

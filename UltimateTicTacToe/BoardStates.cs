@@ -1,5 +1,11 @@
 ﻿namespace UltimateTicTacToe
 {
+    public enum Player
+    {
+        X,
+        O
+    }
+
     public enum LocalBoardState
     {
         Blank,
@@ -12,6 +18,14 @@
         Open,
         X,
         O,
+        Tie
+    }
+
+    public enum GameStatus
+    {
+        InProgress,
+        X_Win,
+        O_Win,
         Tie
     }
 }
