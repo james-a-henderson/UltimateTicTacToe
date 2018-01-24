@@ -8,7 +8,7 @@ namespace UltimateTicTacToe
 {
     public class LocalBoard
     {
-        public GlobalBoardState BoardState { get; private set; }
+        public virtual GlobalBoardState BoardState { get; private set; }
         public LocalBoardState[,] Board { get; private set; }
         
         public LocalBoard()

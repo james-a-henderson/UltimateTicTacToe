@@ -10,7 +10,7 @@ namespace UltimateTicTacToe
     public class GlobalBoard
     {
         public LocalBoard[,] Board { get; private set; }
-        public GameStatus status { get; private set; }
+        public GameStatus Status { get; private set; }
         public Player currentPlayer { get; private set; }
 
         private int nextRow = -1;
@@ -26,6 +26,15 @@ namespace UltimateTicTacToe
             initialize(startingPlayer);
         }
 
+        //for test purposes
+        public GlobalBoard(Player startingPlayer, LocalBoard[,] Board)
+        {
+            this.Board = Board;
+            Status = GameStatus.InProgress;
+            currentPlayer = startingPlayer;
+            verifyBoardState();
+        }
+
         private void initialize(Player startingPlayer)
         {
             Board = new LocalBoard[3, 3];
@@ -38,12 +47,15 @@ namespace UltimateTicTacToe
                 }
             }
 
-            status = GameStatus.InProgress;
+            Status = GameStatus.InProgress;
             currentPlayer = startingPlayer;
         }
 
         public void makeMove(int globalRow, int globalColumn, int localRow, int localColumn)
         {
+            if (Status != GameStatus.InProgress)
+                throw new ArgumentException("Cannot make move on completetd board");
+
             verifyBoardSelection(globalRow, globalColumn);
 
             Board[globalRow, globalColumn].makeMove(localRow, localColumn, currentPlayer);
@@ -82,6 +94,113 @@ namespace UltimateTicTacToe
             {
                 throw new ArgumentException("Selected board is not valid");
             }
+        }
+
+        private void verifyBoardState()
+        {
+            GameStatus result = GameStatus.InProgress;
+            int tieCount = 0;
+            //test horizontal
+            for (int row = 0; row < 3; row++)
+            {
+                result = testLine(Board[row, 0].BoardState, Board[row, 1].BoardState, Board[row, 2].BoardState);
+                if (result == GameStatus.X_Win || result == GameStatus.O_Win)
+                {
+                    Status = result;
+                    return;
+                }
+                else if (result == GameStatus.Tie)
+                {
+                    tieCount++;
+                }
+            }
+
+            //test vertical
+            for (int column = 0; column < 3; column++)
+            {
+                result = testLine(Board[0, column].BoardState, Board[1, column].BoardState, Board[2, column].BoardState);
+                if (result == GameStatus.X_Win || result == GameStatus.O_Win)
+                {
+                    Status = result;
+                    return;
+                }
+                else if (result == GameStatus.Tie)
+                {
+                    tieCount++;
+                }
+            }
+
+            //test diagonals
+            result = testLine(Board[0, 0].BoardState, Board[1, 1].BoardState, Board[2, 2].BoardState);
+            if (result == GameStatus.X_Win || result == GameStatus.O_Win)
+            {
+                Status = result;
+                return;
+            }
+            else if (result == GameStatus.Tie)
+            {
+                tieCount++;
+            }
+
+            result = testLine(Board[0, 2].BoardState, Board[1, 1].BoardState, Board[2, 0].BoardState);
+            if (result == GameStatus.X_Win || result == GameStatus.O_Win)
+            {
+                Status = result;
+                return;
+            }
+            else if (result == GameStatus.Tie)
+            {
+                tieCount++;
+            }
+
+            //if all 8 possible lines are ties, then the game is tied
+            if (tieCount == 8)
+                Status = GameStatus.Tie;
+            else
+                Status = GameStatus.InProgress;
+        }
+
+        /**
+        Tests a given row of three LocalBoardStates to see if they form a line
+
+        Returns:    GlobalBoardState.X if the row contains all Xs
+                    GlobalBoardState.O if the row contains all Os
+                    GlobalBoardState.Tie if neither X or O can win the row
+                    GloblaBoardState.Open otherwise
+        */
+        private GameStatus testLine(GlobalBoardState p1, GlobalBoardState p2, GlobalBoardState p3)
+        {
+            GlobalBoardState[] testArray = { p1, p2, p3 };
+            int openCount = 0;
+            int xCount = 0;
+            int oCount = 0;
+            bool containsTie = false;
+
+            foreach(var b in testArray)
+            {
+                if (b == GlobalBoardState.Open)
+                    openCount++;
+                else if (b == GlobalBoardState.X)
+                    xCount++;
+                else if (b == GlobalBoardState.O)
+                    oCount++;
+                else
+                    containsTie = true;
+            }
+
+            if (containsTie)
+                return GameStatus.Tie;
+
+            if (xCount == 3)
+                return GameStatus.X_Win;
+
+            if (oCount == 3)
+                return GameStatus.O_Win;
+
+            if ((openCount + xCount == 3) || (openCount + oCount == 3))
+                return GameStatus.InProgress;
+
+            return GameStatus.Tie;
         }
     }
 }

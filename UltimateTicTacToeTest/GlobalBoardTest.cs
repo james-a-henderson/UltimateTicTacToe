@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Text;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UltimateTicTacToe;
 
 namespace UltimateTicTacToeTest
@@ -9,7 +10,29 @@ namespace UltimateTicTacToeTest
     [TestClass]
     public class GlobalBoardTest
     {
-        LocalBoardState[,] emptyBoard = new LocalBoardState[3, 3];
+        LocalBoardState[,] emptyBoard;
+        Mock<LocalBoard> xMock;
+        Mock<LocalBoard> oMock;
+        Mock<LocalBoard> tieMock;
+        Mock<LocalBoard> openMock;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            emptyBoard = new LocalBoardState[3, 3];
+
+            xMock = new Mock<LocalBoard>();
+            xMock.Setup(x => x.BoardState).Returns(GlobalBoardState.X);
+
+            oMock = new Mock<LocalBoard>();
+            oMock.Setup(x => x.BoardState).Returns(GlobalBoardState.O);
+
+            tieMock = new Mock<LocalBoard>();
+            tieMock.Setup(x => x.BoardState).Returns(GlobalBoardState.Tie);
+
+            openMock = new Mock<LocalBoard>();
+            openMock.Setup(x => x.BoardState).Returns(GlobalBoardState.Open);
+        }
 
         [TestMethod]
         public void makeMove_ValidFirstMove()
@@ -146,6 +169,67 @@ namespace UltimateTicTacToeTest
         }
 
         [TestMethod]
+        public void makeMove_moveMadeAfterGameCompleted_ThrowsException()
+        {
+            try
+            {
+                LocalBoard[,] localBoard = { { xMock.Object, xMock.Object, xMock.Object},
+                                            { openMock.Object, openMock.Object, openMock.Object },
+                                            { openMock.Object, openMock.Object, openMock.Object }};
+                var board = new GlobalBoard(Player.X, localBoard);
+                board.makeMove(0, 1, 0, 0);
+                Assert.Fail("Exception not thrown");
+            }
+            catch (ArgumentException ae)
+            {
+                Assert.AreEqual("Cannot make move on completetd board", ae.Message);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
+                            e.GetType(), e.Message));
+            }
+
+            try
+            {
+                LocalBoard[,] localBoard = { { openMock.Object, tieMock.Object, oMock.Object},
+                                            { tieMock.Object, tieMock.Object, oMock.Object},
+                                             {tieMock.Object, tieMock.Object, oMock.Object } };
+                var board = new GlobalBoard(Player.X, localBoard);
+                board.makeMove(0, 0, 0, 0);
+                Assert.Fail("Exception not thrown");
+            }
+            catch (ArgumentException ae)
+            {
+                Assert.AreEqual("Cannot make move on completetd board", ae.Message);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
+                            e.GetType(), e.Message));
+            }
+
+            try
+            {
+                LocalBoard[,] localBoard = { { openMock.Object, tieMock.Object, oMock.Object},
+                                            { tieMock.Object, tieMock.Object, oMock.Object},
+                                             {tieMock.Object, tieMock.Object, tieMock.Object } };
+                var board = new GlobalBoard(Player.X, localBoard);
+                board.makeMove(0, 0, 0, 0);
+                Assert.Fail("Exception not thrown");
+            }
+            catch (ArgumentException ae)
+            {
+                Assert.AreEqual("Cannot make move on completetd board", ae.Message);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
+                            e.GetType(), e.Message));
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void makeMove_IncorrectBoardSelection_ThrowsException()
         {
@@ -257,6 +341,85 @@ namespace UltimateTicTacToeTest
                 Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
                             e.GetType(), e.Message));
             }
+        }
+
+        [TestMethod]
+        public void verifyStatus_XWins()
+        {
+            LocalBoard[,] localBoard1 = { { xMock.Object, xMock.Object, xMock.Object},
+                                            { openMock.Object, openMock.Object, openMock.Object },
+                                            { openMock.Object, openMock.Object, openMock.Object }};
+
+            var board1 = new GlobalBoard(Player.X, localBoard1);
+            Assert.AreEqual(GameStatus.X_Win, board1.Status);
+
+            LocalBoard[,] localBoard2 = { { xMock.Object, oMock.Object, oMock.Object},
+                                            {oMock.Object, xMock.Object, oMock.Object },
+                                            {oMock.Object, oMock.Object, xMock.Object }};
+            var board2 = new GlobalBoard(Player.X, localBoard2);
+            Assert.AreEqual(GameStatus.X_Win, board2.Status);
+        }
+
+        [TestMethod]
+        public void verifyStatus_OWins()
+        {
+
+            LocalBoard[,] localBoard1 = { { tieMock.Object, tieMock.Object, oMock.Object},
+                                            { tieMock.Object, tieMock.Object, oMock.Object},
+                                             {tieMock.Object, tieMock.Object, oMock.Object } };
+
+            var board1 = new GlobalBoard(Player.X, localBoard1);
+            Assert.AreEqual(GameStatus.O_Win, board1.Status);
+
+            LocalBoard[,] localBoard2 = { { xMock.Object, openMock.Object, oMock.Object},
+                                            { oMock.Object, oMock.Object, xMock.Object},
+                                             {oMock.Object, tieMock.Object, openMock.Object } };
+
+            var board2 = new GlobalBoard(Player.X, localBoard2);
+            Assert.AreEqual(GameStatus.O_Win, board2.Status);
+        }
+
+        [TestMethod]
+        public void verifyStatus_Tie()
+        {
+            LocalBoard[,] localBoard1 = { { tieMock.Object, tieMock.Object, oMock.Object},
+                                            { tieMock.Object, tieMock.Object, oMock.Object},
+                                             {tieMock.Object, tieMock.Object, tieMock.Object } };
+
+            var board1 = new GlobalBoard(Player.X, localBoard1);
+            Assert.AreEqual(GameStatus.Tie, board1.Status);
+
+            LocalBoard[,] localBoard2 = { { xMock.Object, openMock.Object, oMock.Object},
+                                            { oMock.Object, oMock.Object, xMock.Object},
+                                             {xMock.Object, tieMock.Object, openMock.Object } };
+
+            var board2 = new GlobalBoard(Player.X, localBoard2);
+            Assert.AreEqual(GameStatus.Tie, board2.Status);
+        }
+
+        [TestMethod]
+        public void verifyStatus_InProgress()
+        {
+            LocalBoard[,] localBoard1 = { { tieMock.Object, tieMock.Object, oMock.Object},
+                                            { tieMock.Object, tieMock.Object, oMock.Object},
+                                             {tieMock.Object, tieMock.Object, openMock.Object } };
+
+            var board1 = new GlobalBoard(Player.X, localBoard1);
+            Assert.AreEqual(GameStatus.InProgress, board1.Status);
+
+            LocalBoard[,] localBoard2 = { { xMock.Object, openMock.Object, xMock.Object},
+                                            { oMock.Object, oMock.Object, xMock.Object},
+                                             {xMock.Object, tieMock.Object, openMock.Object } };
+
+            var board2 = new GlobalBoard(Player.X, localBoard2);
+            Assert.AreEqual(GameStatus.InProgress, board2.Status);
+        }
+
+        [TestMethod]
+        public void verifyStatus_StartsInProgress()
+        {
+            var board = new GlobalBoard();
+            Assert.AreEqual(GameStatus.InProgress, board.Status);
         }
     }
 }
