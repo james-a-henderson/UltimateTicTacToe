@@ -17,6 +17,12 @@ namespace UltimateTicTacToe
             Board = new LocalBoardState[3, 3];
         }
 
+        public LocalBoard(LocalBoardState[,] Board)
+        {
+            this.Board = Board;
+            verifyGlobalState();
+        }
+
         public GlobalBoardState makeMove(int row, int column, Player player)
         {
             if (BoardState != GlobalBoardState.Open)
@@ -113,6 +119,71 @@ namespace UltimateTicTacToe
                 return GlobalBoardState.O;
             else
                 return GlobalBoardState.Open;
+        }
+
+        public string[] outputBoard()
+        {
+            string[] output = new string[8];
+
+            if(BoardState == GlobalBoardState.Open)
+            {
+                output[0] = "             ";
+                output[1] = String.Format("  {0} | {1} | {2}  ", 
+                    localBoardStateToString(Board[0,0]), localBoardStateToString(Board[0,1]), localBoardStateToString(Board[0,2]));
+                output[2] = " ___|___|___ ";
+                output[3] = String.Format("  {0} | {1} | {2}  ",
+                    localBoardStateToString(Board[1, 0]), localBoardStateToString(Board[1, 1]), localBoardStateToString(Board[1, 2]));
+                output[4] = " ___|___|___ ";
+                output[5] = String.Format("  {0} | {1} | {2}  ",
+                    localBoardStateToString(Board[2, 0]), localBoardStateToString(Board[2, 1]), localBoardStateToString(Board[2, 2]));
+                output[6] = "    |   |    ";
+                output[7] = "             ";
+            }
+            else if(BoardState == GlobalBoardState.X)
+            {
+                output[0] = "  __     __  ";
+                output[1] = "  \\ \\   / /  ";
+                output[2] = "   \\ \\ / /   ";
+                output[3] = "    \\ V /    ";
+                output[4] = "     > <     ";
+                output[5] = "    / . \\    ";
+                output[6] = "   / / \\ \\   ";
+                output[7] = "  /_/   \\_\\  ";
+            }
+            else if(BoardState == GlobalBoardState.O)
+            {
+                output[0] = "   _______   ";
+                output[1] = "  / _____ \\  ";
+                output[2] = " | |     | | ";
+                output[3] = " | |     | | ";
+                output[4] = " | |     | | ";
+                output[5] = " | |_____| | ";
+                output[6] = "  \\_______/  ";
+                output[7] = "             ";
+            }
+            else if(BoardState == GlobalBoardState.Tie)
+            {
+                output[0] = "  _________  ";
+                output[1] = " |         | ";
+                output[2] = " |__     __| ";
+                output[3] = "    |   |    ";
+                output[4] = "    |   |    ";
+                output[5] = "    |   |    ";
+                output[6] = "    |___|    ";
+                output[7] = "             ";
+            }
+
+            return output;
+        }
+
+        private string localBoardStateToString(LocalBoardState lbs)
+        {
+            if (lbs == LocalBoardState.X)
+                return "X";
+            else if (lbs == LocalBoardState.O)
+                return "O";
+            else
+                return " ";
         }
     }
 }

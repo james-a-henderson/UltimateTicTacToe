@@ -178,110 +178,193 @@ namespace UltimateTicTacToeTest
         [TestMethod]
         public void verifyGlobalState_XandO_NoExtraMoves()
         {
-            var board1 = new LocalBoard();
-            board1.makeMove(0, 0, Player.X);
-            board1.makeMove(0, 1, Player.X);
-            board1.makeMove(0, 2, Player.X);
+            LocalBoardState[,] input1 = { { LocalBoardState.X, LocalBoardState.X, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank } };
+            var board1 = new LocalBoard(input1);
             Assert.AreEqual(GlobalBoardState.X, board1.BoardState);
 
-            var board2 = new LocalBoard();
-            board2.makeMove(1, 0, Player.O);
-            board2.makeMove(1, 1, Player.O);
-            board2.makeMove(1, 2, Player.O);
+            LocalBoardState[,] input2 = { { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.O, LocalBoardState.O, LocalBoardState.O },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank } };
+            var board2 = new LocalBoard(input2);
             Assert.AreEqual(GlobalBoardState.O, board2.BoardState);
 
-            var board3 = new LocalBoard();
-            board3.makeMove(2, 0, Player.O);
-            board3.makeMove(2, 1, Player.O);
-            board3.makeMove(2, 2, Player.O);
+            LocalBoardState[,] input3 = { { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.O, LocalBoardState.O, LocalBoardState.O } };
+            var board3 = new LocalBoard(input3);
             Assert.AreEqual(GlobalBoardState.O, board3.BoardState);
 
-            var board4 = new LocalBoard();
-            board4.makeMove(0, 0, Player.O);
-            board4.makeMove(1, 0, Player.O);
-            board4.makeMove(2, 0, Player.O);
+            LocalBoardState[,] input4 = { { LocalBoardState.O, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.O, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.O, LocalBoardState.Blank, LocalBoardState.Blank } };
+            var board4 = new LocalBoard(input4);
             Assert.AreEqual(GlobalBoardState.O, board4.BoardState);
 
-            var board5 = new LocalBoard();
-            board5.makeMove(0, 1, Player.O);
-            board5.makeMove(1, 1, Player.O);
-            board5.makeMove(2, 1, Player.O);
-            Assert.AreEqual(GlobalBoardState.O, board5.BoardState);
+            LocalBoardState[,] input5 = { { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank } };
+            var board5 = new LocalBoard(input5);
+            Assert.AreEqual(GlobalBoardState.X, board5.BoardState);
 
-            var board6 = new LocalBoard();
-            board6.makeMove(0, 2, Player.O);
-            board6.makeMove(1, 2, Player.O);
-            board6.makeMove(2, 2, Player.O);
+            LocalBoardState[,] input6 = { { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.O },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.O },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.O } };
+            var board6 = new LocalBoard(input6);
             Assert.AreEqual(GlobalBoardState.O, board6.BoardState);
 
-            var board7 = new LocalBoard();
-            board7.makeMove(0, 2, Player.O);
-            board7.makeMove(1, 1, Player.O);
-            board7.makeMove(2, 0, Player.O);
-            Assert.AreEqual(GlobalBoardState.O, board7.BoardState);
+            LocalBoardState[,] input7 = { { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.Blank } };
+            var board7 = new LocalBoard(input7);
+            Assert.AreEqual(GlobalBoardState.X, board7.BoardState);
 
-            var board8 = new LocalBoard();
-            board8.makeMove(0, 0, Player.O);
-            board8.makeMove(1, 1, Player.O);
-            board8.makeMove(2, 2, Player.O);
+            LocalBoardState[,] input8 = { { LocalBoardState.O, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.O, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.O } };
+            var board8 = new LocalBoard(input8);
             Assert.AreEqual(GlobalBoardState.O, board8.BoardState);
         }
 
         [TestMethod]
         public void verifyGlobalState_XandO_ExtraMoves()
         {
-            var board1 = new LocalBoard();
-            board1.makeMove(0, 0, Player.X);
-            board1.makeMove(0, 1, Player.O);
-            board1.makeMove(1, 1, Player.X);
-            board1.makeMove(2, 2, Player.X);
+            LocalBoardState[,] input1 = { { LocalBoardState.X, LocalBoardState.O, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.X } };
+
+            var board1 = new LocalBoard(input1);
             Assert.AreEqual(GlobalBoardState.X, board1.BoardState);
 
-            var board2 = new LocalBoard();
-            board2.makeMove(0, 0, Player.O);
-            board2.makeMove(0, 1, Player.X);
-            board2.makeMove(0, 2, Player.O);
-            board2.makeMove(1, 0, Player.X);
-            board2.makeMove(1, 1, Player.O);
-            board2.makeMove(1, 2, Player.O);
-            board2.makeMove(2, 0, Player.X);
-            board2.makeMove(2, 1, Player.O);
-            board2.makeMove(2, 2, Player.O);
+            LocalBoardState[,] input2 = { { LocalBoardState.O, LocalBoardState.X, LocalBoardState.O },
+                                                { LocalBoardState.X, LocalBoardState.O, LocalBoardState.O },
+                                                { LocalBoardState.X, LocalBoardState.O, LocalBoardState.O } };
+            var board2 = new LocalBoard(input2);
             Assert.AreEqual(GlobalBoardState.O, board2.BoardState);
 
-            var board3 = new LocalBoard();
-            board3.makeMove(0, 0, Player.X);
-            board3.makeMove(0, 1, Player.X);
-            board3.makeMove(1, 1, Player.X);
-            board3.makeMove(2, 2, Player.X);
+            LocalBoardState[,] input3 = { { LocalBoardState.X, LocalBoardState.X, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.X } };
+            var board3 = new LocalBoard(input3);
             Assert.AreEqual(GlobalBoardState.X, board3.BoardState);
         }
 
         [TestMethod]
         public void verifyGlobalState_XandO_MultipleLinesInOneMove()
         {
-            var board = new LocalBoard();
-            board.makeMove(0, 0, Player.X);
-            board.makeMove(0, 2, Player.X);
-            board.makeMove(1, 1, Player.X);
-            board.makeMove(1, 2, Player.X);
-            board.makeMove(2, 2, Player.X);
+            LocalBoardState[,] input = { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.X } };
+            var board = new LocalBoard(input);
             Assert.AreEqual(GlobalBoardState.X, board.BoardState);
         }
 
         public void verifyGlobalState_Tie()
         {
-            var board = new LocalBoard();
-            board.makeMove(0, 0, Player.X);
-            board.makeMove(0, 1, Player.O);
-            board.makeMove(0, 2, Player.X);
-            board.makeMove(1, 0, Player.O);
-            board.makeMove(1, 1, Player.X);
-            board.makeMove(1, 2, Player.O);
-            board.makeMove(2, 0, Player.O);
-            board.makeMove(2, 1, Player.X);
-            board.makeMove(2, 2, Player.O);
+            LocalBoardState[,] input = { { LocalBoardState.X, LocalBoardState.O, LocalBoardState.X },
+                                                { LocalBoardState.O, LocalBoardState.X, LocalBoardState.O },
+                                                { LocalBoardState.O, LocalBoardState.X, LocalBoardState.O } };
+            var board = new LocalBoard(input);
             Assert.AreEqual(GlobalBoardState.Tie, board.BoardState);
+        }
+
+        [TestMethod]
+        public void outputBoard_EmptyBoard()
+        {
+            var board = new LocalBoard();
+
+            string[] expected = new string[8];
+            expected[0] = "             ";
+            expected[1] = "    |   |    ";
+            expected[2] = " ___|___|___ ";
+            expected[3] = "    |   |    ";
+            expected[4] = " ___|___|___ ";
+            expected[5] = "    |   |    ";
+            expected[6] = "    |   |    ";
+            expected[7] = "             ";
+
+            CollectionAssert.AreEqual(expected, board.outputBoard());
+        }
+
+        [TestMethod]
+        public void outputBoard_IncompleteBoard()
+        {
+            LocalBoardState[,] input = { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.Blank, LocalBoardState.Blank, LocalBoardState.O } };
+            var board = new LocalBoard(input);
+
+            string[] expected = new string[8];
+            expected[0] = "             ";
+            expected[1] = "  X |   | X  ";
+            expected[2] = " ___|___|___ ";
+            expected[3] = "    | X |    ";
+            expected[4] = " ___|___|___ ";
+            expected[5] = "    |   | O  ";
+            expected[6] = "    |   |    ";
+            expected[7] = "             ";
+
+            CollectionAssert.AreEqual(expected, board.outputBoard());
+        }
+
+        [TestMethod]
+        public void outputBoard_X()
+        {
+            LocalBoardState[,] input = { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.O, LocalBoardState.O, LocalBoardState.X } };
+            var board = new LocalBoard(input);
+
+            string[] expected = new string[8];
+            expected[0] = "  __     __  ";
+            expected[1] = "  \\ \\   / /  ";
+            expected[2] = "   \\ \\ / /   ";
+            expected[3] = "    \\ V /    ";
+            expected[4] = "     > <     ";
+            expected[5] = "    / . \\    ";
+            expected[6] = "   / / \\ \\   ";
+            expected[7] = "  /_/   \\_\\  ";
+        }
+
+        [TestMethod]
+        public void outputBoard_O()
+        {
+            LocalBoardState[,] input = { { LocalBoardState.X, LocalBoardState.Blank, LocalBoardState.X },
+                                                { LocalBoardState.Blank, LocalBoardState.X, LocalBoardState.Blank },
+                                                { LocalBoardState.O, LocalBoardState.O, LocalBoardState.O } };
+            var board = new LocalBoard(input);
+
+            string[] expected = new string[8];
+            expected[0] = "   _______   ";
+            expected[1] = "  / _____ \\  ";
+            expected[2] = " | |     | | ";
+            expected[3] = " | |     | | ";
+            expected[4] = " | |     | | ";
+            expected[5] = " | |_____| | ";
+            expected[6] = "  \\_______/  ";
+            expected[7] = "             ";
+
+            CollectionAssert.AreEqual(expected, board.outputBoard());
+        }
+
+        [TestMethod]
+        public void outputBoard_Tie()
+        {
+            LocalBoardState[,] input = { { LocalBoardState.X, LocalBoardState.O, LocalBoardState.X },
+                                                { LocalBoardState.X, LocalBoardState.X, LocalBoardState.O },
+                                                { LocalBoardState.O, LocalBoardState.X, LocalBoardState.O } };
+            var board = new LocalBoard(input);
+
+            string[] expected = new string[8];
+            expected[0] = "  _________  ";
+            expected[1] = " |         | ";
+            expected[2] = " |__     __| ";
+            expected[3] = "    |   |    ";
+            expected[4] = "    |   |    ";
+            expected[5] = "    |   |    ";
+            expected[6] = "    |___|    ";
+            expected[7] = "             ";
         }
     }
 }
