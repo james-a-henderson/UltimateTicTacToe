@@ -121,7 +121,7 @@ namespace UltimateTicTacToe
                 return GlobalBoardState.Open;
         }
 
-        public string[] outputBoard()
+        public virtual string[] outputBoard()
         {
             string[] output = new string[8];
 

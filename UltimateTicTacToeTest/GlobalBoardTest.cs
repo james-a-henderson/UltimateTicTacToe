@@ -21,17 +21,61 @@ namespace UltimateTicTacToeTest
         {
             emptyBoard = new LocalBoardState[3, 3];
 
+            var xBoardString = new string[8];
+            xBoardString[0] = "  __     __  ";
+            xBoardString[1] = "  \\ \\   / /  ";
+            xBoardString[2] = "   \\ \\ / /   ";
+            xBoardString[3] = "    \\ V /    ";
+            xBoardString[4] = "     > <     ";
+            xBoardString[5] = "    / . \\    ";
+            xBoardString[6] = "   / / \\ \\   ";
+            xBoardString[7] = "  /_/   \\_\\  ";
+
             xMock = new Mock<LocalBoard>();
             xMock.Setup(x => x.BoardState).Returns(GlobalBoardState.X);
+            xMock.Setup(x => x.outputBoard()).Returns(xBoardString);
+
+            var oBoardString = new string[8];
+            oBoardString[0] = "   _______   ";
+            oBoardString[1] = "  / _____ \\  ";
+            oBoardString[2] = " | |     | | ";
+            oBoardString[3] = " | |     | | ";
+            oBoardString[4] = " | |     | | ";
+            oBoardString[5] = " | |_____| | ";
+            oBoardString[6] = "  \\_______/  ";
+            oBoardString[7] = "             ";
 
             oMock = new Mock<LocalBoard>();
             oMock.Setup(x => x.BoardState).Returns(GlobalBoardState.O);
+            oMock.Setup(x => x.outputBoard()).Returns(oBoardString);
+
+            var tieBoardString = new string[8];
+            tieBoardString[0] = "  _________  ";
+            tieBoardString[1] = " |         | ";
+            tieBoardString[2] = " |__     __| ";
+            tieBoardString[3] = "    |   |    ";
+            tieBoardString[4] = "    |   |    ";
+            tieBoardString[5] = "    |   |    ";
+            tieBoardString[6] = "    |___|    ";
+            tieBoardString[7] = "             ";
 
             tieMock = new Mock<LocalBoard>();
             tieMock.Setup(x => x.BoardState).Returns(GlobalBoardState.Tie);
+            tieMock.Setup(x => x.outputBoard()).Returns(tieBoardString);
+
+            var openBoardString = new string[8];
+            openBoardString[0] = "             ";
+            openBoardString[1] = "  X |   | X  ";
+            openBoardString[2] = " ___|___|___ ";
+            openBoardString[3] = "    | X |    ";
+            openBoardString[4] = " ___|___|___ ";
+            openBoardString[5] = "    |   | O  ";
+            openBoardString[6] = "    |   |    ";
+            openBoardString[7] = "             ";
 
             openMock = new Mock<LocalBoard>();
             openMock.Setup(x => x.BoardState).Returns(GlobalBoardState.Open);
+            openMock.Setup(x => x.outputBoard()).Returns(openBoardString);
         }
 
         [TestMethod]
@@ -173,10 +217,10 @@ namespace UltimateTicTacToeTest
         {
             try
             {
-                LocalBoard[,] localBoard = { { xMock.Object, xMock.Object, xMock.Object},
+                LocalBoard[,] localBoards = { { xMock.Object, xMock.Object, xMock.Object},
                                             { openMock.Object, openMock.Object, openMock.Object },
                                             { openMock.Object, openMock.Object, openMock.Object }};
-                var board = new GlobalBoard(Player.X, localBoard);
+                var board = new GlobalBoard(Player.X, localBoards);
                 board.makeMove(0, 1, 0, 0);
                 Assert.Fail("Exception not thrown");
             }
@@ -192,10 +236,10 @@ namespace UltimateTicTacToeTest
 
             try
             {
-                LocalBoard[,] localBoard = { { openMock.Object, tieMock.Object, oMock.Object},
+                LocalBoard[,] localBoards = { { openMock.Object, tieMock.Object, oMock.Object},
                                             { tieMock.Object, tieMock.Object, oMock.Object},
                                              {tieMock.Object, tieMock.Object, oMock.Object } };
-                var board = new GlobalBoard(Player.X, localBoard);
+                var board = new GlobalBoard(Player.X, localBoards);
                 board.makeMove(0, 0, 0, 0);
                 Assert.Fail("Exception not thrown");
             }
@@ -211,10 +255,10 @@ namespace UltimateTicTacToeTest
 
             try
             {
-                LocalBoard[,] localBoard = { { openMock.Object, tieMock.Object, oMock.Object},
+                LocalBoard[,] localBoards = { { openMock.Object, tieMock.Object, oMock.Object},
                                             { tieMock.Object, tieMock.Object, oMock.Object},
                                              {tieMock.Object, tieMock.Object, tieMock.Object } };
-                var board = new GlobalBoard(Player.X, localBoard);
+                var board = new GlobalBoard(Player.X, localBoards);
                 board.makeMove(0, 0, 0, 0);
                 Assert.Fail("Exception not thrown");
             }
@@ -346,17 +390,17 @@ namespace UltimateTicTacToeTest
         [TestMethod]
         public void verifyStatus_XWins()
         {
-            LocalBoard[,] localBoard1 = { { xMock.Object, xMock.Object, xMock.Object},
+            LocalBoard[,] localBoards1 = { { xMock.Object, xMock.Object, xMock.Object},
                                             { openMock.Object, openMock.Object, openMock.Object },
                                             { openMock.Object, openMock.Object, openMock.Object }};
 
-            var board1 = new GlobalBoard(Player.X, localBoard1);
+            var board1 = new GlobalBoard(Player.X, localBoards1);
             Assert.AreEqual(GameStatus.X_Win, board1.Status);
 
-            LocalBoard[,] localBoard2 = { { xMock.Object, oMock.Object, oMock.Object},
+            LocalBoard[,] localBoards2 = { { xMock.Object, oMock.Object, oMock.Object},
                                             {oMock.Object, xMock.Object, oMock.Object },
                                             {oMock.Object, oMock.Object, xMock.Object }};
-            var board2 = new GlobalBoard(Player.X, localBoard2);
+            var board2 = new GlobalBoard(Player.X, localBoards2);
             Assert.AreEqual(GameStatus.X_Win, board2.Status);
         }
 
@@ -364,54 +408,54 @@ namespace UltimateTicTacToeTest
         public void verifyStatus_OWins()
         {
 
-            LocalBoard[,] localBoard1 = { { tieMock.Object, tieMock.Object, oMock.Object},
+            LocalBoard[,] localBoards1 = { { tieMock.Object, tieMock.Object, oMock.Object},
                                             { tieMock.Object, tieMock.Object, oMock.Object},
                                              {tieMock.Object, tieMock.Object, oMock.Object } };
 
-            var board1 = new GlobalBoard(Player.X, localBoard1);
+            var board1 = new GlobalBoard(Player.X, localBoards1);
             Assert.AreEqual(GameStatus.O_Win, board1.Status);
 
-            LocalBoard[,] localBoard2 = { { xMock.Object, openMock.Object, oMock.Object},
+            LocalBoard[,] localBoards2 = { { xMock.Object, openMock.Object, oMock.Object},
                                             { oMock.Object, oMock.Object, xMock.Object},
                                              {oMock.Object, tieMock.Object, openMock.Object } };
 
-            var board2 = new GlobalBoard(Player.X, localBoard2);
+            var board2 = new GlobalBoard(Player.X, localBoards2);
             Assert.AreEqual(GameStatus.O_Win, board2.Status);
         }
 
         [TestMethod]
         public void verifyStatus_Tie()
         {
-            LocalBoard[,] localBoard1 = { { tieMock.Object, tieMock.Object, oMock.Object},
+            LocalBoard[,] localBoards1 = { { tieMock.Object, tieMock.Object, oMock.Object},
                                             { tieMock.Object, tieMock.Object, oMock.Object},
                                              {tieMock.Object, tieMock.Object, tieMock.Object } };
 
-            var board1 = new GlobalBoard(Player.X, localBoard1);
+            var board1 = new GlobalBoard(Player.X, localBoards1);
             Assert.AreEqual(GameStatus.Tie, board1.Status);
 
-            LocalBoard[,] localBoard2 = { { xMock.Object, openMock.Object, oMock.Object},
+            LocalBoard[,] localBoards2 = { { xMock.Object, openMock.Object, oMock.Object},
                                             { oMock.Object, oMock.Object, xMock.Object},
                                              {xMock.Object, tieMock.Object, openMock.Object } };
 
-            var board2 = new GlobalBoard(Player.X, localBoard2);
+            var board2 = new GlobalBoard(Player.X, localBoards2);
             Assert.AreEqual(GameStatus.Tie, board2.Status);
         }
 
         [TestMethod]
         public void verifyStatus_InProgress()
         {
-            LocalBoard[,] localBoard1 = { { tieMock.Object, tieMock.Object, oMock.Object},
+            LocalBoard[,] localBoards1 = { { tieMock.Object, tieMock.Object, oMock.Object},
                                             { tieMock.Object, tieMock.Object, oMock.Object},
                                              {tieMock.Object, tieMock.Object, openMock.Object } };
 
-            var board1 = new GlobalBoard(Player.X, localBoard1);
+            var board1 = new GlobalBoard(Player.X, localBoards1);
             Assert.AreEqual(GameStatus.InProgress, board1.Status);
 
-            LocalBoard[,] localBoard2 = { { xMock.Object, openMock.Object, xMock.Object},
+            LocalBoard[,] localBoards2 = { { xMock.Object, openMock.Object, xMock.Object},
                                             { oMock.Object, oMock.Object, xMock.Object},
                                              {xMock.Object, tieMock.Object, openMock.Object } };
 
-            var board2 = new GlobalBoard(Player.X, localBoard2);
+            var board2 = new GlobalBoard(Player.X, localBoards2);
             Assert.AreEqual(GameStatus.InProgress, board2.Status);
         }
 
@@ -420,6 +464,44 @@ namespace UltimateTicTacToeTest
         {
             var board = new GlobalBoard();
             Assert.AreEqual(GameStatus.InProgress, board.Status);
+        }
+
+        [TestMethod]
+        public void toString_Test()
+        {
+            var expectedBuilder = new StringBuilder();
+            expectedBuilder.AppendLine("             ||             ||  _________  ");
+            expectedBuilder.AppendLine("  X |   | X  ||  X |   | X  || |         | ");
+            expectedBuilder.AppendLine(" ___|___|___ || ___|___|___ || |__     __| ");
+            expectedBuilder.AppendLine("    | X |    ||    | X |    ||    |   |    ");
+            expectedBuilder.AppendLine(" ___|___|___ || ___|___|___ ||    |   |    ");
+            expectedBuilder.AppendLine("    |   | O  ||    |   | O  ||    |   |    ");
+            expectedBuilder.AppendLine("    |   |    ||    |   |    ||    |___|    ");
+            expectedBuilder.AppendLine("             ||             ||             ");
+            expectedBuilder.AppendLine("===========================================");
+            expectedBuilder.AppendLine("             ||             ||  __     __  ");
+            expectedBuilder.AppendLine("  X |   | X  ||  X |   | X  ||  \\ \\   / /  ");
+            expectedBuilder.AppendLine(" ___|___|___ || ___|___|___ ||   \\ \\ / /   ");
+            expectedBuilder.AppendLine("    | X |    ||    | X |    ||    \\ V /    ");
+            expectedBuilder.AppendLine(" ___|___|___ || ___|___|___ ||     > <     ");
+            expectedBuilder.AppendLine("    |   | O  ||    |   | O  ||    / . \\    ");
+            expectedBuilder.AppendLine("    |   |    ||    |   |    ||   / / \\ \\   ");
+            expectedBuilder.AppendLine("             ||             ||  /_/   \\_\\  ");
+            expectedBuilder.AppendLine("===========================================");
+            expectedBuilder.AppendLine("             ||             ||   _______   ");
+            expectedBuilder.AppendLine("  X |   | X  ||  X |   | X  ||  / _____ \\  ");
+            expectedBuilder.AppendLine(" ___|___|___ || ___|___|___ || | |     | | ");
+            expectedBuilder.AppendLine("    | X |    ||    | X |    || | |     | | ");
+            expectedBuilder.AppendLine(" ___|___|___ || ___|___|___ || | |     | | ");
+            expectedBuilder.AppendLine("    |   | O  ||    |   | O  || | |_____| | ");
+            expectedBuilder.AppendLine("    |   |    ||    |   |    ||  \\_______/  ");
+            expectedBuilder.AppendLine("             ||             ||             ");
+
+            LocalBoard[,] localBoards = { { openMock.Object, openMock.Object, tieMock.Object},
+                                            {openMock.Object, openMock.Object, xMock.Object },
+                                            {openMock.Object, openMock.Object, oMock.Object }};
+            var board = new GlobalBoard(Player.X, localBoards);
+            Assert.AreEqual(expectedBuilder.ToString(), board.ToString());
         }
     }
 }

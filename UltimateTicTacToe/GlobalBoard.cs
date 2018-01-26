@@ -202,5 +202,37 @@ namespace UltimateTicTacToe
 
             return GameStatus.Tie;
         }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            string [,][] outputArray = new string[3,3][];
+
+            for(int row = 0; row < 3; row++)
+            {
+                for(int column = 0; column < 3; column++)
+                {
+                    outputArray[row, column] = Board[row, column].outputBoard();
+                }
+            }
+
+            for(int i = 0; i < 8; i++)
+            {
+                builder.AppendLine(outputArray[0, 0][i] + "||" + outputArray[0, 1][i] + "||" + outputArray[0,2][i]);
+            }
+            builder.AppendLine("===========================================");
+
+            for (int i = 0; i < 8; i++)
+            {
+                builder.AppendLine(outputArray[1, 0][i] + "||" + outputArray[1, 1][i] + "||" + outputArray[1,2][i]);
+            }
+            builder.AppendLine("===========================================");
+            for (int i = 0; i < 8; i++)
+            {
+                builder.AppendLine(outputArray[2, 0][i] + "||" + outputArray[2, 1][i] + "||" + outputArray[2, 2][i]);
+            }
+
+            return builder.ToString();
+        }
     }
 }
