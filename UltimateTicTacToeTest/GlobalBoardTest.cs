@@ -226,7 +226,7 @@ namespace UltimateTicTacToeTest
             }
             catch (ArgumentException ae)
             {
-                Assert.AreEqual("Cannot make move on completetd board", ae.Message);
+                Assert.AreEqual("Cannot make move on completed board", ae.Message);
             }
             catch (Exception e)
             {
@@ -245,7 +245,7 @@ namespace UltimateTicTacToeTest
             }
             catch (ArgumentException ae)
             {
-                Assert.AreEqual("Cannot make move on completetd board", ae.Message);
+                Assert.AreEqual("Cannot make move on completed board", ae.Message);
             }
             catch (Exception e)
             {
@@ -264,7 +264,7 @@ namespace UltimateTicTacToeTest
             }
             catch (ArgumentException ae)
             {
-                Assert.AreEqual("Cannot make move on completetd board", ae.Message);
+                Assert.AreEqual("Cannot make move on completed board", ae.Message);
             }
             catch (Exception e)
             {

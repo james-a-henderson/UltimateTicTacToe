@@ -11,7 +11,7 @@ namespace UltimateTicTacToe
     {
         public LocalBoard[,] Board { get; private set; }
         public GameStatus Status { get; private set; }
-        public Player currentPlayer { get; private set; }
+        public virtual Player currentPlayer { get; private set; }
 
         private int nextRow = -1;
         private int nextColumn = -1;
@@ -51,10 +51,10 @@ namespace UltimateTicTacToe
             currentPlayer = startingPlayer;
         }
 
-        public void makeMove(int globalRow, int globalColumn, int localRow, int localColumn)
+        public virtual void makeMove(int globalRow, int globalColumn, int localRow, int localColumn)
         {
             if (Status != GameStatus.InProgress)
-                throw new ArgumentException("Cannot make move on completetd board");
+                throw new ArgumentException("Cannot make move on completed board");
 
             verifyBoardSelection(globalRow, globalColumn);
 
