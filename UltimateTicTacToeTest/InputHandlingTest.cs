@@ -117,5 +117,26 @@ namespace UltimateTicTacToeTest
             Assert.AreEqual(expected.ToString(), InputHandling.sendInput("HELP", mockBoard.Object));
             Assert.AreEqual(expected.ToString(), InputHandling.sendInput("hElP", mockBoard.Object));
         }
+
+        [TestMethod]
+        public void handleInput_exit()
+        {
+            string expected = "Thank you for playing!";
+
+            Assert.AreEqual(expected, InputHandling.sendInput("exit", mockBoard.Object));
+            Assert.IsTrue(mockBoard.Object.Exiting);
+
+            mockBoard.Object.Exiting = false;
+            Assert.AreEqual(expected, InputHandling.sendInput("quit", mockBoard.Object));
+            Assert.IsTrue(mockBoard.Object.Exiting);
+
+            mockBoard.Object.Exiting = false;
+            Assert.AreEqual(expected, InputHandling.sendInput("EXIT", mockBoard.Object));
+            Assert.IsTrue(mockBoard.Object.Exiting);
+
+            mockBoard.Object.Exiting = false;
+            Assert.AreEqual(expected, InputHandling.sendInput("QUIT", mockBoard.Object));
+            Assert.IsTrue(mockBoard.Object.Exiting);
+        }
     }
 }

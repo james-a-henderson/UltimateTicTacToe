@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UltimateTicTacToe
 {
@@ -12,6 +9,8 @@ namespace UltimateTicTacToe
         public LocalBoard[,] Board { get; private set; }
         public GameStatus Status { get; private set; }
         public virtual Player currentPlayer { get; private set; }
+
+        public bool Exiting { get; set; }
 
         private int nextRow = -1;
         private int nextColumn = -1;
@@ -32,6 +31,7 @@ namespace UltimateTicTacToe
             this.Board = Board;
             Status = GameStatus.InProgress;
             currentPlayer = startingPlayer;
+            Exiting = false;
             verifyBoardState();
         }
 
@@ -49,6 +49,7 @@ namespace UltimateTicTacToe
 
             Status = GameStatus.InProgress;
             currentPlayer = startingPlayer;
+            Exiting = false;
         }
 
         public virtual void makeMove(int globalRow, int globalColumn, int localRow, int localColumn)

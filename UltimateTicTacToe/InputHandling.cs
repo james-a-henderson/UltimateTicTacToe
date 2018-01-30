@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 /**
     Static wrapper class that handles the input to the globalGameBoard
@@ -26,6 +23,10 @@ namespace UltimateTicTacToe
             {
                 message = help();
             }
+            else if (input.Trim().ToUpper() == "EXIT" || input.Trim().ToUpper() == "QUIT")
+            {
+                message = exit(board);
+            }
             else //invalid input
             {
                 message = "Invalid Input. Enter valid command, or type ? for help. ";
@@ -36,6 +37,10 @@ namespace UltimateTicTacToe
         
         private static string buildOutput(string message, GlobalBoard board)
         {
+            //We don't want to generate output when the player is exiting
+            if (board.Exiting)
+                return message;
+
             var builder = new StringBuilder();
             builder.AppendLine(board.ToString());
             builder.Append(message);
@@ -92,6 +97,12 @@ namespace UltimateTicTacToe
             helpMessage.AppendLine("To exit, type exit");
 
             return helpMessage.ToString();
+        }
+
+        private static string exit(GlobalBoard board)
+        {
+            board.Exiting = true;
+            return "Thank you for playing!";
         }
     }
 }
