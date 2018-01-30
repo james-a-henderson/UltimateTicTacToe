@@ -2,6 +2,7 @@
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UltimateTicTacToe;
+using System.Text;
 
 namespace UltimateTicTacToeTest
 {
@@ -98,6 +99,23 @@ namespace UltimateTicTacToeTest
             Assert.AreEqual(expected, InputHandling.sendInput("1 2 4", mockBoard.Object));
             Assert.AreEqual(expected, InputHandling.sendInput("12", mockBoard.Object));
             Assert.AreEqual(expected, InputHandling.sendInput("", mockBoard.Object));
+        }
+
+        [TestMethod]
+        public void handleInput_help()
+        {
+            mockBoard.Setup(x => x.currentPlayer).Returns(Player.X);
+
+            var expected = new StringBuilder();
+            expected.AppendLine("Test");
+            expected.AppendLine("To make a move, type in '1 2', where the first number is the board you want to move to, and the second number is the specific square you want to move on");
+            expected.AppendLine("To exit, type exit");
+            expected.Append("X's Move: ");
+
+            Assert.AreEqual(expected.ToString(), InputHandling.sendInput("?", mockBoard.Object));
+            Assert.AreEqual(expected.ToString(), InputHandling.sendInput("help", mockBoard.Object));
+            Assert.AreEqual(expected.ToString(), InputHandling.sendInput("HELP", mockBoard.Object));
+            Assert.AreEqual(expected.ToString(), InputHandling.sendInput("hElP", mockBoard.Object));
         }
     }
 }
