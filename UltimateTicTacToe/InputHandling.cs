@@ -8,6 +8,11 @@ namespace UltimateTicTacToe
 {
     public static class InputHandling
     {
+        public static string initialBoardState(GlobalBoard board)
+        {
+            return buildOutput("", board);
+        }
+
         public static string sendInput(string input, GlobalBoard board)
         {
             string message = "";
@@ -29,7 +34,7 @@ namespace UltimateTicTacToe
             }
             else //invalid input
             {
-                message = "Invalid Input. Enter valid command, or type ? for help. ";
+                message = "Invalid Input. Enter valid command, or type ? for help.";
             }
 
             return buildOutput(message, board);
@@ -43,7 +48,12 @@ namespace UltimateTicTacToe
 
             var builder = new StringBuilder();
             builder.AppendLine(board.ToString());
-            builder.Append(message);
+            if (message.Length > 0)
+            {
+                builder.AppendLine(message);
+            }
+                
+            builder.AppendLine(nextBoard(board));
             if(board.currentPlayer == Player.X)
             {
                 builder.Append("X's Move: ");
@@ -67,7 +77,7 @@ namespace UltimateTicTacToe
             {
                 if (globalBoardNum < 1 || globalBoardNum > 9 || localBoardNum < 1 || localBoardNum > 9)
                 {
-                    return "Move is invalid! Please Enter valid location. ";
+                    return "Move is invalid! Please Enter valid location.";
                 }
 
                 var globalBoard = boardNumberToCoordinates(globalBoardNum);
@@ -80,13 +90,13 @@ namespace UltimateTicTacToe
             catch (ArgumentException ae)
             {
                 if (ae.Message == "Selected board is not valid")
-                    return "Selected board is completed. Select another location. ";
+                    return "Selected board is completed. Select another location.";
                 else if (ae.Message == "Not going to required board")
-                    return "Not going to requried board. Select another location. ";
+                    return "Not going to requried board. Select another location.";
                 else if (ae.Message == "Attempting to make move on space where move was previously made")
-                    return "Space already used, choose another location. ";
+                    return "Space already used, choose another location.";
                 else
-                    return "Unknown input error. Choose another location. ";
+                    return "Unknown input error. Choose another location.";
             }
         }
 
@@ -94,7 +104,7 @@ namespace UltimateTicTacToe
         {
             var helpMessage = new StringBuilder();
             helpMessage.AppendLine("To make a move, type in '1 2', where the first number is the board you want to move to, and the second number is the specific square you want to move on");
-            helpMessage.AppendLine("To exit, type exit");
+            helpMessage.Append("To exit, type exit");
 
             return helpMessage.ToString();
         }
@@ -103,6 +113,15 @@ namespace UltimateTicTacToe
         {
             board.Exiting = true;
             return "Thank you for playing!";
+        }
+
+        private static string nextBoard(GlobalBoard board)
+        {
+            int nextNumber = board.nextBoardNumber();
+            if (nextNumber == 0)
+                return "Next Board: Any Board";
+            else
+                return "Next Board: " + nextNumber;
         }
     }
 }

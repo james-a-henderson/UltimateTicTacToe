@@ -68,6 +68,8 @@ namespace UltimateTicTacToe
                 currentPlayer = Player.X;
             else
                 currentPlayer = Player.O;
+
+            verifyBoardState();
         }
 
         //throws exceptions if board selection is not valid
@@ -234,6 +236,25 @@ namespace UltimateTicTacToe
             }
 
             return builder.ToString();
+        }
+
+        //gets the next board as a single number
+        //returns 0 if any board is possible
+        public virtual int nextBoardNumber()
+        {
+
+            if (nextRow < 0 || nextColumn < 0)
+            {
+                return 0;
+            }
+            else if (Board[nextRow, nextColumn].BoardState == GlobalBoardState.Open)
+            {
+                return (nextRow * 3) + nextColumn + 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

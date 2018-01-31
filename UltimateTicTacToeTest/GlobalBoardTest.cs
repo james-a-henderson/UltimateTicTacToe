@@ -503,5 +503,64 @@ namespace UltimateTicTacToeTest
             var board = new GlobalBoard(Player.X, localBoards);
             Assert.AreEqual(expectedBuilder.ToString(), board.ToString());
         }
+
+        [TestMethod]
+        public void nextBoardNumber_StartWithAnyBoard()
+        {
+            LocalBoard[,] localBoards = { { openMock.Object, openMock.Object, openMock.Object},
+                                            { openMock.Object, openMock.Object, openMock.Object },
+                                            { openMock.Object, openMock.Object, openMock.Object }};
+
+            var board = new GlobalBoard(Player.X, localBoards);
+
+            Assert.AreEqual(0, board.nextBoardNumber());
+        }
+
+        [TestMethod]
+        public void nextBoardNumber_CorrectlyIdentifyNextBoard()
+        {
+            LocalBoard[,] localBoards = { { openMock.Object, openMock.Object, openMock.Object},
+                                            { openMock.Object, openMock.Object, openMock.Object },
+                                            { openMock.Object, openMock.Object, openMock.Object }};
+
+            var board = new GlobalBoard(Player.X, localBoards);
+            board.makeMove(0, 0, 0, 0);
+            Assert.AreEqual(1, board.nextBoardNumber());
+
+            board.makeMove(0, 0, 0, 1);
+            Assert.AreEqual(2, board.nextBoardNumber());
+
+            board.makeMove(0, 1, 0, 2);
+            Assert.AreEqual(3, board.nextBoardNumber());
+
+            board.makeMove(0, 2, 1, 1);
+            Assert.AreEqual(5, board.nextBoardNumber());
+
+            board.makeMove(1, 1, 1, 2);
+            Assert.AreEqual(6, board.nextBoardNumber());
+
+            board.makeMove(1, 2, 2, 0);
+            Assert.AreEqual(7, board.nextBoardNumber());
+
+            board.makeMove(2, 0, 2, 2);
+            Assert.AreEqual(9, board.nextBoardNumber());
+        }
+
+        [TestMethod]
+        public void nextBoardNumber_AnyBoard_OnCompletedBoard()
+        {
+            LocalBoard[,] localBoards = { { openMock.Object, openMock.Object, openMock.Object},
+                                            { xMock.Object, oMock.Object, tieMock.Object },
+                                            { openMock.Object, openMock.Object, openMock.Object }};
+
+            var board = new GlobalBoard(Player.X, localBoards);
+
+            board.makeMove(0, 0, 1, 0);
+            Assert.AreEqual(0, board.nextBoardNumber());
+            board.makeMove(0, 0, 1, 1);
+            Assert.AreEqual(0, board.nextBoardNumber());
+            board.makeMove(0, 0, 1, 2);
+            Assert.AreEqual(0, board.nextBoardNumber());
+        }
     }
 }
