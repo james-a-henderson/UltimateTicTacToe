@@ -2,7 +2,6 @@
 using Moq;
 using System;
 using System.Text;
-using System.Collections.Generic;
 using UltimateTicTacToe;
 
 namespace UltimateTicTacToeTest

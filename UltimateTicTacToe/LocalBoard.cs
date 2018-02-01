@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UltimateTicTacToe
 {
@@ -47,61 +43,102 @@ namespace UltimateTicTacToe
             return BoardState;
         }
 
-        //this method assumes that there cannot be a valid X and O row
+        //this method assumes that there cannot be a valid X row and valid O row at the same time
         private void verifyGlobalState()
         {
+            GlobalBoardState horizontalResult = testHorizontalRows();
+            GlobalBoardState verticalResult = testVerticalRows();
+            GlobalBoardState diagonalResult = testDiagonalRows();
+            GlobalBoardState finalResult;
+            
+            if(horizontalResult != GlobalBoardState.Open)
+            {
+                finalResult = horizontalResult;
+            }
+            else if (verticalResult != GlobalBoardState.Open)
+            {
+                finalResult = verticalResult;
+            }
+            else if (diagonalResult != GlobalBoardState.Open)
+            {
+                finalResult = diagonalResult;
+            }
+            else if (boardIsFull())
+            {
+                //if board is full with no lines, result is a tie
+                finalResult = GlobalBoardState.Tie;
+            }
+            else
+            {
+                finalResult = GlobalBoardState.Open;
+            }
+
+            BoardState = finalResult;
+        }
+
+        private GlobalBoardState testHorizontalRows()
+        {
             GlobalBoardState result = GlobalBoardState.Open;
-            //test horizontal
-            for(int row = 0; row < 3; row++)
+            for (int row = 0; row < 3; row++)
             {
                 result = testLine(Board[row, 0], Board[row, 1], Board[row, 2]);
                 if (result == GlobalBoardState.X || result == GlobalBoardState.O)
                 {
-                    BoardState = result;
-                    return;
+                    return result;
                 }
             }
 
-            //test vertical
-            for(int column = 0; column < 3; column++)
+            return GlobalBoardState.Open;
+        }
+
+        private GlobalBoardState testVerticalRows()
+        {
+            GlobalBoardState result = GlobalBoardState.Open;
+            for (int column = 0; column < 3; column++)
             {
                 result = testLine(Board[0, column], Board[1, column], Board[2, column]);
                 if (result == GlobalBoardState.X || result == GlobalBoardState.O)
                 {
-                    BoardState = result;
-                    return;
+                    return result;
                 }
             }
 
-            //test diagonals
+            return GlobalBoardState.Open;
+        }
+
+        private GlobalBoardState testDiagonalRows()
+        {
+            GlobalBoardState result = GlobalBoardState.Open;
+
             result = testLine(Board[0, 0], Board[1, 1], Board[2, 2]);
             if (result == GlobalBoardState.X || result == GlobalBoardState.O)
             {
-                BoardState = result;
-                return;
+                return result;
             }
             result = testLine(Board[0, 2], Board[1, 1], Board[2, 0]);
             if (result == GlobalBoardState.X || result == GlobalBoardState.O)
             {
-                BoardState = result;
-                return;
+                return result;
             }
 
-            //test to see if board is not full
-            for(int row = 0; row < 3; row++)
+            return GlobalBoardState.Open;
+        }
+
+        private bool boardIsFull()
+        {
+            for (int row = 0; row < 3; row++)
             {
-                for(int column = 0; column < 3; column++)
+                for (int column = 0; column < 3; column++)
                 {
                     if (Board[row, column] == LocalBoardState.Blank)
                     {
                         BoardState = GlobalBoardState.Open;
-                        return;
+                        return false;
                     }
                 }
             }
 
-            //if board is full and no valid lines are found, result must be a tie
-            BoardState = GlobalBoardState.Tie;
+            return true;
         }
 
         /**
