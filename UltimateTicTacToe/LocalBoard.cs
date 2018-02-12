@@ -19,28 +19,36 @@ namespace UltimateTicTacToe
             verifyGlobalState();
         }
 
-        public GlobalBoardState makeMove(int row, int column, Player player)
+        public MoveResult makeMove(int row, int column, Player player)
         {
             if (BoardState != GlobalBoardState.Open)
-                throw new ArgumentException("Board is already completed");
+            {
+                return MoveResult.BoardAlreadyCompleted;
+            }
 
             if (row < 0 || row > 2 || column < 0 || column > 2)
-                throw new ArgumentOutOfRangeException("Position outside of the local board");
+            {
+                return MoveResult.SpaceOutOfRange;
+            }
 
             if(Board[row,column] == LocalBoardState.Blank)
             {
                 if (player == Player.X)
+                {
                     Board[row, column] = LocalBoardState.X;
+                }
                 else
+                {
                     Board[row, column] = LocalBoardState.O;
+                }
             }
             else
             {
-                throw new ArgumentException("Attempting to make move on space where move was previously made");
+                return MoveResult.SpaceAlreadyUsed;
             }
 
             verifyGlobalState();
-            return BoardState;
+            return MoveResult.Success;
         }
 
         //this method assumes that there cannot be a valid X row and valid O row at the same time
@@ -151,11 +159,17 @@ namespace UltimateTicTacToe
         private GlobalBoardState testLine(LocalBoardState p1, LocalBoardState p2, LocalBoardState p3)
         {
             if (p1 == LocalBoardState.X && p2 == LocalBoardState.X && p3 == LocalBoardState.X)
+            {
                 return GlobalBoardState.X;
+            }
             else if (p1 == LocalBoardState.O && p2 == LocalBoardState.O && p3 == LocalBoardState.O)
+            {
                 return GlobalBoardState.O;
+            }
             else
+            {
                 return GlobalBoardState.Open;
+            }
         }
 
         public virtual string[] outputBoard()
@@ -216,11 +230,17 @@ namespace UltimateTicTacToe
         private string localBoardStateToString(LocalBoardState lbs)
         {
             if (lbs == LocalBoardState.X)
+            {
                 return "X";
+            }
             else if (lbs == LocalBoardState.O)
+            {
                 return "O";
+            }
             else
+            {
                 return " ";
+            }
         }
     }
 }

@@ -73,29 +73,43 @@ namespace UltimateTicTacToe
 
         private static string makeMove(GlobalBoard board, int globalBoardNum, int localBoardNum)
         {
-            try
+
+            if (globalBoardNum < 1 || globalBoardNum > 9 || localBoardNum < 1 || localBoardNum > 9)
             {
-                if (globalBoardNum < 1 || globalBoardNum > 9 || localBoardNum < 1 || localBoardNum > 9)
-                {
-                    return "Move is invalid! Please Enter valid location.";
-                }
-
-                var globalBoard = boardNumberToCoordinates(globalBoardNum);
-                var localBoard = boardNumberToCoordinates(localBoardNum);
-
-                board.makeMove(globalBoard.Item1, globalBoard.Item2, localBoard.Item1, localBoard.Item2);
-
-                return "";
+                return "Move is invalid! Please Enter valid location.";
             }
-            catch (ArgumentException ae)
+
+            var globalBoard = boardNumberToCoordinates(globalBoardNum);
+            var localBoard = boardNumberToCoordinates(localBoardNum);
+
+            MoveResult result = board.makeMove(globalBoard.Item1, globalBoard.Item2, localBoard.Item1, localBoard.Item2);
+
+            return processMoveResult(result);
+        }
+
+        private static string processMoveResult(MoveResult result)
+        {
+            switch(result)
             {
-                if (ae.Message == "Selected board is not valid")
+                case MoveResult.Success:
+                    return "";
+
+                case MoveResult.BoardAlreadyCompleted:
                     return "Selected board is completed. Select another location.";
-                else if (ae.Message == "Not going to required board")
+
+                case MoveResult.RequiredBoardNotSelected:
                     return "Not going to requried board. Select another location.";
-                else if (ae.Message == "Attempting to make move on space where move was previously made")
+
+                case MoveResult.SpaceAlreadyUsed:
                     return "Space already used, choose another location.";
-                else
+
+                case MoveResult.BoardOutOfRange:
+                    return "Board selection is invalid! Please enter valid location.";
+
+                case MoveResult.SpaceOutOfRange:
+                    return "Space selection is invalid! Please enter valid location.";
+
+                default:
                     return "Unknown input error. Choose another location.";
             }
         }

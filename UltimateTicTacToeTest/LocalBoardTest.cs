@@ -89,75 +89,41 @@ namespace UltimateTicTacToeTest
         }
 
         [TestMethod]
-        public void makeMove_InvalidCoordinates_ThrowsException()
+        public void makeMove_InvalidCoordinates_ReturnsError()
         {
-            try
-            {
-                var board = new LocalBoard();
-                board.makeMove(-1, 0, Player.X);
-                Assert.Fail("Exception not thrown");
-            }
-            catch(ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Position outside of the local board", ae.ParamName);
-            }
-            catch(Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
 
-            try
-            {
-                var board = new LocalBoard();
-                board.makeMove(0, 3, Player.X);
-                Assert.Fail("Exception not thrown");
-            }
-            catch (ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Position outside of the local board", ae.ParamName);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
+            var board = new LocalBoard();
+            var result1 = board.makeMove(-1, 0, Player.X);
+            Assert.AreEqual(MoveResult.SpaceOutOfRange, result1);
 
-            try
-            {
-                var board = new LocalBoard();
-                board.makeMove(3, -1, Player.X);
-                Assert.Fail("Exception not thrown");
-            }
-            catch (ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Position outside of the local board", ae.ParamName);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
+            var result2 = board.makeMove(3, 0, Player.X);
+            Assert.AreEqual(MoveResult.SpaceOutOfRange, result2);
+
+            var result3 = board.makeMove(0, -1, Player.X);
+            Assert.AreEqual(MoveResult.SpaceOutOfRange, result3);
+
+            var result4 = board.makeMove(0, 3, Player.X);
+            Assert.AreEqual(MoveResult.SpaceOutOfRange, result4);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void makeMove_AttemptedMoveOnPreviouslyUsedSpace_ThrowsException()
+        public void makeMove_AttemptedMoveOnPreviouslyUsedSpace_ReturnsError()
         {
             var board = new LocalBoard();
             board.makeMove(0, 0, Player.X);
-            board.makeMove(0, 0, Player.O);
+            var result = board.makeMove(0, 0, Player.O);
+            Assert.AreEqual(MoveResult.SpaceAlreadyUsed, result);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void makeMove_AttemptedMoveOnCompletedBoard_ThrowsException()
+        public void makeMove_AttemptedMoveOnCompletedBoard_ReturnsError()
         {
             var board = new LocalBoard();
             board.makeMove(0, 0, Player.X);
             board.makeMove(1, 1, Player.X);
             board.makeMove(2, 2, Player.X);
-            board.makeMove(0, 1, Player.O);
+            var result = board.makeMove(0, 1, Player.O);
+            Assert.AreEqual(MoveResult.BoardAlreadyCompleted, result);
         }
 
         [TestMethod]

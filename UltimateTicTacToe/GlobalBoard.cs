@@ -52,51 +52,77 @@ namespace UltimateTicTacToe
             Exiting = false;
         }
 
-        public virtual void makeMove(int globalRow, int globalColumn, int localRow, int localColumn)
+        public virtual MoveResult makeMove(int globalRow, int globalColumn, int localRow, int localColumn)
         {
             if (Status != GameStatus.InProgress)
+            {
                 throw new ArgumentException("Cannot make move on completed board");
+            }        
 
-            verifyBoardSelection(globalRow, globalColumn);
+            MoveResult globalVerification = verifyBoardSelection(globalRow, globalColumn);
+            if(globalVerification != MoveResult.Success)
+            {
+                return globalVerification;
+            }
 
-            Board[globalRow, globalColumn].makeMove(localRow, localColumn, currentPlayer);
+            MoveResult localVerification = Board[globalRow, globalColumn].makeMove(localRow, localColumn, currentPlayer);
+            if(localVerification != MoveResult.Success)
+            {
+                return localVerification;
+            }
 
+            setupNextTurn(localRow, localColumn);
+            verifyBoardState();
+
+            return MoveResult.Success;
+        }
+
+        private void setupNextTurn(int localRow, int localColumn)
+        {
             nextRow = localRow;
             nextColumn = localColumn;
 
             if (currentPlayer == Player.O)
+            {
                 currentPlayer = Player.X;
+            }
             else
+            {
                 currentPlayer = Player.O;
-
-            verifyBoardState();
+            }       
         }
 
         //throws exceptions if board selection is not valid
-        private void verifyBoardSelection(int globalRow, int globalColumn)
+        private MoveResult verifyBoardSelection(int globalRow, int globalColumn)
         {
             if (globalRow < 0 || globalRow > 2 || globalColumn < 0 || globalColumn > 2)
-                throw new ArgumentOutOfRangeException("Board selection is out of range");
+            {
+                return MoveResult.BoardOutOfRange;
+            }
 
             //is first move
             if (nextRow < 0 || nextColumn < 0)
-                return;
+            {
+                return MoveResult.Success;
+            }
 
             //check to see if the player is required to go to the nextRow & nextColumn
             if(Board[nextRow,nextColumn].BoardState == GlobalBoardState.Open)
             {
                 //ensure player is going to that board
                 if (globalRow != nextRow || globalColumn != nextColumn)
-                    throw new ArgumentException("Not going to required board");
+                    return MoveResult.RequiredBoardNotSelected;
                 else
-                    return;
+                    return MoveResult.Success;
             }
 
             //ensure selected board is open
             if(Board[globalRow, globalColumn].BoardState != GlobalBoardState.Open)
             {
-                throw new ArgumentException("Selected board is not valid");
+                return MoveResult.BoardAlreadyCompleted;
             }
+
+            return MoveResult.Success;
         }
 
         private void verifyBoardState()
@@ -229,26 +255,42 @@ namespace UltimateTicTacToe
             foreach(var b in testArray)
             {
                 if (b == GlobalBoardState.Open)
+                {
                     openCount++;
+                }
                 else if (b == GlobalBoardState.X)
+                {
                     xCount++;
+                }
                 else if (b == GlobalBoardState.O)
+                {
                     oCount++;
+                }
                 else
+                {
                     containsTie = true;
+                }
             }
 
             if (containsTie)
+            {
                 return GameStatus.Tie;
+            }
 
             if (xCount == 3)
+            {
                 return GameStatus.X_Win;
+            }
 
             if (oCount == 3)
+            {
                 return GameStatus.O_Win;
+            }
 
             if ((openCount + xCount == 3) || (openCount + oCount == 3))
+            {
                 return GameStatus.InProgress;
+            }
 
             return GameStatus.Tie;
         }

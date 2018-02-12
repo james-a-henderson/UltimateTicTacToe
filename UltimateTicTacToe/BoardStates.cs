@@ -28,4 +28,15 @@
         O_Win,
         Tie
     }
+
+    public enum MoveResult
+    {
+        Success,
+        BoardOutOfRange,
+        SpaceOutOfRange,
+        BoardAlreadyCompleted,
+        RequiredBoardNotSelected,
+        SpaceAlreadyUsed,
+        OtherError
+    }
 }

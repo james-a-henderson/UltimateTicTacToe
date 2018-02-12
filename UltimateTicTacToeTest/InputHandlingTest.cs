@@ -41,7 +41,7 @@ namespace UltimateTicTacToeTest
         }
 
         [TestMethod]
-        public void handleInput_makeMove_InvalidInput()
+        public void handleInput_makeMove_InvalidCoordinates()
         {
             mockBoard.Setup(x => x.currentPlayer).Returns(Player.X);
 
@@ -60,7 +60,7 @@ namespace UltimateTicTacToeTest
         public void handleInput_makeMove_SpaceAlreadyPlayed()
         {
             mockBoard.Setup(x => x.currentPlayer).Returns(Player.X);
-            mockBoard.Setup(x => x.makeMove(0, 0, 0, 0)).Throws(new ArgumentException("Attempting to make move on space where move was previously made"));
+            mockBoard.Setup(x => x.makeMove(0, 0, 0, 0)).Returns(MoveResult.SpaceAlreadyUsed);
 
             string expected = "Test\r\nSpace already used, choose another location.\r\nNext Board: Any Board\r\nX's Move: ";
             Assert.AreEqual(expected, InputHandling.sendInput("1 1", mockBoard.Object));
@@ -70,17 +70,17 @@ namespace UltimateTicTacToeTest
         public void handleInput_makeMove_LocalBoardCompleted()
         {
             mockBoard.Setup(x => x.currentPlayer).Returns(Player.X);
-            mockBoard.Setup(x => x.makeMove(0, 0, It.IsAny<int>(), It.IsAny<int>())).Throws(new ArgumentException("Selected board is not valid"));
+            mockBoard.Setup(x => x.makeMove(0, 0, It.IsAny<int>(), It.IsAny<int>())).Returns(MoveResult.BoardAlreadyCompleted);
 
             string expected = "Test\r\nSelected board is completed. Select another location.\r\nNext Board: Any Board\r\nX's Move: ";
             Assert.AreEqual(expected, InputHandling.sendInput("1 1", mockBoard.Object));
         }
 
         [TestMethod]
-        public void handleInput_makeMove_WrongRequiredBoard()
+        public void handleInput_makeMove_RequiredBoardNotSelected()
         {
             mockBoard.Setup(x => x.currentPlayer).Returns(Player.X);
-            mockBoard.Setup(x => x.makeMove(0, 0, It.IsAny<int>(), It.IsAny<int>())).Throws(new ArgumentException("Not going to required board"));
+            mockBoard.Setup(x => x.makeMove(0, 0, It.IsAny<int>(), It.IsAny<int>())).Returns(MoveResult.RequiredBoardNotSelected);
 
             string expected = "Test\r\nNot going to requried board. Select another location.\r\nNext Board: Any Board\r\nX's Move: ";
             Assert.AreEqual(expected, InputHandling.sendInput("1 1", mockBoard.Object));

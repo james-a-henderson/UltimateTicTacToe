@@ -273,21 +273,21 @@ namespace UltimateTicTacToeTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void makeMove_IncorrectBoardSelection_ThrowsException()
+        public void makeMove_IncorrectBoardSelection_ReturnsError()
         {
             var board = new GlobalBoard();
             board.makeMove(0, 0, 0, 2);
-            board.makeMove(0, 0, 0, 1);
+            var result = board.makeMove(0, 0, 0, 1);
+            Assert.AreEqual(MoveResult.RequiredBoardNotSelected, result);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void makeMove_AttemptedMoveOnPreviouslyUsedSpace_ThrowsException()
+        public void makeMove_AttemptedMoveOnPreviouslyUsedSpace_ReturnsError()
         {
             var board = new GlobalBoard();
             board.makeMove(0, 0, 0, 0);
-            board.makeMove(0, 0, 0, 0);
+            var result = board.makeMove(0, 0, 0, 0);
+            Assert.AreEqual(MoveResult.SpaceAlreadyUsed, result);
         }
 
         [TestMethod]
@@ -305,8 +305,7 @@ namespace UltimateTicTacToeTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void makeMove_MoveOnCompletedBoard_ThrowsException()
+        public void makeMove_MoveOnCompletedBoard_Retruns_Error()
         {
             var board = new GlobalBoard();
             board.makeMove(0, 0, 1, 1);
@@ -315,75 +314,26 @@ namespace UltimateTicTacToeTest
             board.makeMove(1, 0, 0, 0);
             board.makeMove(0, 0, 1, 2);
             board.makeMove(1, 2, 0, 0);
-            board.makeMove(0, 0, 2, 2);
+            var result = board.makeMove(0, 0, 2, 2);
+            Assert.AreEqual(MoveResult.BoardAlreadyCompleted, result);
         }
 
         [TestMethod]
-        public void makeMove_GlobalCoordinatesOutOfBounds_ThrowsException()
+        public void makeMove_GlobalCoordinatesOutOfBounds_ReturnsError()
         {
-            try
-            {
-                var board = new GlobalBoard();
-                board.makeMove(-1,0,0,0);
-                Assert.Fail("Exception not thrown");
-            }
-            catch (ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Board selection is out of range", ae.ParamName);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
 
-            try
-            {
-                var board = new GlobalBoard();
-                board.makeMove(3, 0, 0, 0);
-                Assert.Fail("Exception not thrown");
-            }
-            catch (ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Board selection is out of range", ae.ParamName);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
+            var board = new GlobalBoard();
+            var result1 = board.makeMove(-1,0,0,0);
+            Assert.AreEqual(MoveResult.BoardOutOfRange, result1);
 
-            try
-            {
-                var board = new GlobalBoard();
-                board.makeMove(0, -1, 0, 0);
-                Assert.Fail("Exception not thrown");
-            }
-            catch (ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Board selection is out of range", ae.ParamName);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
+            var result2 = board.makeMove(3, 0, 0, 0);
+            Assert.AreEqual(MoveResult.BoardOutOfRange, result2);
 
-            try
-            {
-                var board = new GlobalBoard();
-                board.makeMove(0, 3, 0, 0);
-                Assert.Fail("Exception not thrown");
-            }
-            catch (ArgumentOutOfRangeException ae)
-            {
-                Assert.AreEqual("Board selection is out of range", ae.ParamName);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                            e.GetType(), e.Message));
-            }
+            var result3 = board.makeMove(0, -1, 0, 0);
+            Assert.AreEqual(MoveResult.BoardOutOfRange, result3);
+
+            var result4 = board.makeMove(0, 3, 0, 0);
+            Assert.AreEqual(MoveResult.BoardOutOfRange, result4);
         }
 
         [TestMethod]
